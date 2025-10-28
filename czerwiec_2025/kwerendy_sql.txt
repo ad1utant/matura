@@ -1,0 +1,49 @@
+# alter table klienci add primary key (id_klienta)
+# alter table fryzjerzy add primary key (id_fryzjera)
+# alter table uslugi add primary key (id_uslugi)
+# alter table wizyty add primary key (id_wizyty)
+# alter table wizyty add foreign key (id_klienta) references klienci(id_klienta);
+# alter table wizyty add foreign key (id_fryzjera) references fryzjerzy(id_fryzjera);
+# alter table wizyty add foreign key (id_uslugi) references uslugi(id_uslugi);
+
+#ZADANIE 7.1
+# SELECT k.id_klienta, k.imie, k.nazwisko, SUM(u.cena) as suma FROM wizyty as w
+# INNER JOIN fryzjerzy as f on w.id_fryzjera = f.id_fryzjera
+# INNER JOIN uslugi as u on u.id_uslugi = w.id_uslugi
+# INNER JOIN klienci as k on k.id_klienta = w.id_klienta
+# GROUP BY id_klienta
+# ORDER BY suma desc
+
+#ZADANIE 7.2
+# SELECT k.id_klienta, k.imie, k.nazwisko, f.imie as imie_fryzjera FROM wizyty as w
+# INNER JOIN fryzjerzy as f on w.id_fryzjera = f.id_fryzjera
+# INNER JOIN uslugi as u on u.id_uslugi = w.id_uslugi
+# INNER JOIN klienci as k on k.id_klienta = w.id_klienta
+# WHERE k.imie = f.imie
+# GROUP BY k.id_klienta
+# ORDER BY k.imie ASC
+
+#ZADANIE 7.3
+# CREATE VIEW rabaty AS SELECT 0.1*u.cena as rabat from wizyty as w
+# INNER JOIN fryzjerzy as f on w.id_fryzjera = f.id_fryzjera
+# INNER JOIN uslugi as u on u.id_uslugi = w.id_uslugi
+# INNER JOIN klienci as k on k.id_klienta = w.id_klienta
+# WHERE TIME(termin) <= '12:00' AND TIME(termin) >= '10:00' and k.emeryt = 'TAK'
+# SELECT SUM(rabaty.rabat) from rabaty
+
+#ZADANIE 7.4
+# SELECT f.id_fryzjera, f.imie from wizyty as w
+# INNER JOIN klienci as k on k.id_klienta = w.id_klienta
+# INNER JOIN fryzjerzy as f on f.id_fryzjera = w.id_fryzjera
+# INNER JOIN uslugi as u on u.id_uslugi = w.id_uslugi
+# WHERE DATE(w.termin) BETWEEN '2023-04-01' AND '2023-04-30'
+# GROUP BY f.id_fryzjera
+#
+# EXCEPT
+#
+# SELECT DISTINCT f.id_fryzjera, f.imie from wizyty as w
+# INNER JOIN klienci as k on k.id_klienta = w.id_klienta
+# INNER JOIN fryzjerzy as f on f.id_fryzjera = w.id_fryzjera
+# INNER JOIN uslugi as u on u.id_uslugi = w.id_uslugi
+# WHERE DATE(w.termin) BETWEEN '2023-04-01' AND '2023-04-30' AND u.nazwa = 'Strzyzenie meskie'
+# GROUP BY f.id_fryzjera
