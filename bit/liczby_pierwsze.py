@@ -2,7 +2,6 @@ import math
 from itertools import count
 from zoneinfo import reset_tzpath
 
-
 def is_prime(n):
     if n < 2:
         return False
