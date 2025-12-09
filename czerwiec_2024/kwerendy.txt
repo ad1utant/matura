@@ -1,0 +1,27 @@
+ALTER TABLE szczepionki ADD PRIMARY KEY (kod_szczepionki)
+ALTER TABLE wizyty ADD FOREIGN KEY (kod_szczepionki) REFERENCES szczepionki(kod_szczepionki)
+
+8.1
+SELECT COUNT(*) as liczba, kod_szczepionki from wizyty as w
+GROUP BY kod_szczepionki
+ORDER BY liczba DESC
+
+8.2
+a)
+SELECT DISTINCT w.pesel FROM wizyty as w
+INNER JOIN szczepionki as s on w.kod_szczepionki = s.kod_szczepionki
+WHERE s.kod_szczepionki = 'sz12_3d'
+
+b)
+SELECT DISTINCT w.pesel, LEFT(RIGHT(pesel,2),1) as cyfra FROM wizyty as w
+INNER JOIN szczepionki as s on w.kod_szczepionki = s.kod_szczepionki
+WHERE s.kod_szczepionki = 'sz12_3d'
+HAVING MOD(cyfra,2) = 0
+
+8.3
+SELECT COUNT(*) as liczba_pacjentow, MONTH(data_szczepienia), YEAR(data_szczepienia) FROM wizyty as w
+INNER JOIN szczepionki as s
+on w.kod_szczepionki = s.kod_szczepionki
+WHERE numer_dawki = liczba_dawek
+group by YEAR(data_szczepienia), MONTH(data_szczepienia)
+order by liczba_pacjentow DESC

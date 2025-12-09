@@ -1,0 +1,40 @@
+8.1
+111,sz15_5d
+83,sz10_4d
+82,sz21_5d
+81,sz17_4d
+79,sz20_5d
+73,sz9_5d
+72,sz3_5d
+71,sz13_5d
+69,sz1_3d
+64,sz6_3d
+60,sz7_5d
+60,sz12_3d
+59,sz24_3d
+45,sz22_3d
+38,sz18_2d
+35,sz19_2d
+34,sz4_2d
+29,sz8_2d
+28,sz16_1d
+25,sz11_1d
+23,sz23_1d
+23,sz5_1d
+16,sz14_1d
+15,sz2_1d
+
+8.2
+pacjentów - 24
+kobiety - 17
+
+8.3
+48 pacjentów maj 2023
+
+8.4
+SELECT DISTINCT pesel FROM wizyty as w
+INNER JOIN pacjenci as p
+on w.pesel = p.pesel
+INNER JOIN punkt_szczepien as ps
+on w.kod_punktu = ps.kod_punktu
+where ps.wojewodztwo_punktu != p.wojewodztwo_pacjenta
