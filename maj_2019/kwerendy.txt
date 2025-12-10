@@ -1,0 +1,56 @@
+alter table perfumy add primary key (id_perfum)
+alter table marki add primary key (id_marki)
+alter table perfumy add foreign key (id_marki) references marki(id_marki)
+alter table sklad add foreign key(id_perfum) references perfumy(id_perfum)
+
+6.1
+select nazwa_p from sklad as s
+inner join perfumy as p on s.id_perfum = p.id_perfum
+where s.nazwa_skladnika = 'absolut jasminu'
+
+6.2
+CREATE VIEW minimalna_cena AS
+SELECT rodzina_zapachow, MIN(cena) as mini from perfumy
+group by rodzina_zapachow
+
+SELECT p.rodzina_zapachow, mc.mini as cena_najtanszych_perfum, p.nazwa_p from perfumy as p
+inner join minimalna_cena as mc
+on mc.rodzina_zapachow = p.rodzina_zapachow
+where mc.mini = p.cena
+
+6.3
+CREATE VIEW zawierajace_paczule AS SELECT DISTINCT m.id_marki from marki as m
+inner join  perfumy as p
+on m.id_marki = p.id_marki
+inner join  sklad as s
+on p.id_perfum = s.id_perfum
+where nazwa_skladnika LIKE "%paczula%"
+
+select id_marki, nazwa_m from marki as m
+where id_marki not in (
+    SELECT id_marki from zawierajace_paczule
+    )
+ORDER BY nazwa_m
+
+6.4
+select nazwa_p, cena*0.85 as obnizona_cena from perfumy as p
+inner join marki as m
+on p.id_marki = m.id_marki
+where nazwa_m = 'Mou De Rosine' and rodzina_zapachow = 'orientalno-drzewna'
+order by obnizona_cena
+
+6.5
+CREATE VIEW liczba_marek as SELECT m.id_marki, COUNT(p.id_marki) from perfumy as p
+inner join  marki as m
+on m.id_marki = p.id_marki
+group by m.id_marki,rodzina_zapachow
+
+CREATE VIEW jedna_rodzina as select nazwa_m, lm.id_marki, COUNT(*) as liczba from liczba_marek as lm
+inner join  marki as m
+on m.id_marki = lm.id_marki
+group by id_marki
+having liczba = "1"
+
+select DISTINCT nazwa_m, p.rodzina_zapachow from jedna_rodzina as jr
+inner join perfumy as p
+on p.id_marki = jr.id_marki
